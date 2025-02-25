@@ -17,7 +17,7 @@ const SignUpPage = () => {
     password: '',
   });
 
-  const {signUp, isSigningUp} = useAuthStore();
+  const {signup, isSigningUp} = useAuthStore();
 
   const validateForm =() =>{
     if(!formData.fullName || !formData.email || !formData.password){
@@ -39,7 +39,7 @@ const SignUpPage = () => {
     e.preventDefault()
     const succcess = validateForm()
     if(succcess){
-      signUp(formData)
+      signup(formData)
     }
   }
 
