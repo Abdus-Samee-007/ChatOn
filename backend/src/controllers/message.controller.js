@@ -3,8 +3,8 @@ import Message from "../models/message.model.js";
 
 export const getUsersForSidebar = async (req, res) => {
     try {
-        const loggedInUser = req.user._id;
-        const filterUsers= await User.find({ _id: { $ne: loggedInUser } }).select('name email');
+        const loggedInUserId = req.user._id;
+        const filteredUsers= await User.find({ _id: { $ne: loggedInUserId } }).select('-password');
     } catch (error) {
         console.log("Error in getUsersForSidebar", error);
         res.status(500).json({ message: "Internal Server Error" });
