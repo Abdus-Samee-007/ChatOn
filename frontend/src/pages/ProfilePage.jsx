@@ -8,6 +8,17 @@ const ProfilePage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
 
   const handleImageUpload = async(e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = async()=>{
+      const base64Image = reader.result;
+      setSelectedImg(base64Image);
+      await updateProfile({profilePic: base64Image});
+    }
   }
 
   return (
@@ -71,7 +82,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <div className="mt-6 bg-base-300 rounded-xl p-6">
+          <div className="mt-6 bg-base-300 rounded-xl px-6">
             <h2 className="text-lg font-medium  mb-4">Account Information</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
