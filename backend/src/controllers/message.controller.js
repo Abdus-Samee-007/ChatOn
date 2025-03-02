@@ -20,10 +20,9 @@ export const getMessages = async (req, res) => {
             $or: [
                 { myId: myId, receiverId: userToChatId },
                 { myId: userToChatId, receiverId: myId }
-            ]
-        }).sort({ createdAt: 1 });
-
-
+            ],
+        });
+        res.status(200).json(messages);
 
     } catch (error) {
         console.log("Error in getMessages:", error);
