@@ -4,13 +4,13 @@ import { Image, Send, X } from 'react-feather';
 import { useChatStore } from '../store/useChatStore';
 import toast from 'react-hot-toast';
 
-function MessageInput() {
+const MessageInput= () => {
   const [text,setText] = useState("");
   const [imagePreview,setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const {sendMessage} = useChatStore();
 
-  const handleImageChange = async () => {
+  const handleImageChange = (e) => {
     const file=e.target.files[0];
     if(!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
