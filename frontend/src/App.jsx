@@ -15,14 +15,17 @@ import {Loader} from 'lucide-react'
 import toast, { Toaster } from 'react-hot-toast';
 
 const App = () => {
-  const {authUser, checkAuth, isCheckingAuth} = useAuthStore()
+  const {authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore()
   const {theme} = useThemeStore()
+
+  console.log({onlineUsers});
+  
+
   useEffect(()=>{
     checkAuth()
   }
   ,[checkAuth]);
-
-  console.log({authUser});
+  
   if(isCheckingAuth && !authUser) return (
     <div className="flex justify-center items-center h-screen">
       <Loader className='size-10 animate-spin' />
