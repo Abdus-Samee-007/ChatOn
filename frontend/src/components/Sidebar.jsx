@@ -75,6 +75,12 @@ const Sidebar = () => {
             </div>
           </button>
         ))}
+
+        {filteredUsers.length === 0 && (
+          <div className="text-center text-zinc-500 mt-5">
+            No users found
+          </div>
+        )}
       </div>
     </ aside>
   );
