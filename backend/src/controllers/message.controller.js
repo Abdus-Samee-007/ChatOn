@@ -19,8 +19,8 @@ export const getMessages = async (req, res) => {
         const myId = req.user._id;
         const messages = await Message.find({
             $or: [
-                { myId: myId, receiverId: userToChatId },
-                { myId: userToChatId, receiverId: myId }
+                { senderId: myId, receiverId: userToChatId },
+                { senderId: userToChatId, receiverId: myId }
             ],
         });
         res.status(200).json(messages);
