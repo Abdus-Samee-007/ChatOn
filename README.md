@@ -1,6 +1,7 @@
 # ChatOn
 
-A full-stack real-time chat application built with React, Vite, Zustand, Tailwind CSS (frontend) and Node.js, Express, MongoDB, Socket.IO (backend).
+A full stack chat application which lets you chat real-time privately with others and has features such as media upload and saved chat history.
+Also has custom profile options such as choosing your preferred theme across the app or choosing your own profile photo.
 
 ---
 
@@ -42,12 +43,19 @@ ChatOn/
 
 ---
 
+## Tech Stack
+
+- **Frontend:** React, Vite, Zustand, Tailwind CSS, DaisyUI, React Router, Socket.IO Client
+- **Backend:** Node.js, Express, MongoDB, Mongoose, Socket.IO, Cloudinary, JWT, bcryptjs
+
+---
+
 ## Setup
 
 ### 1. Clone the repository
 
 ```sh
-git clone https://github.com/yourusername/ChatOn.git
+git clone https://github.com/Abdus-Samee-007/ChatOn
 cd ChatOn
 ```
 
@@ -109,20 +117,8 @@ From the root folder, you can use:
 - `npm run start` &mdash; Starts the backend server
 
 ---
-
-## Tech Stack
-
-- **Frontend:** React, Vite, Zustand, Tailwind CSS, DaisyUI, React Router, Socket.IO Client
-- **Backend:** Node.js, Express, MongoDB, Mongoose, Socket.IO, Cloudinary, JWT, bcryptjs
-
----
-
 ## License
 
 MIT
 
 ---
-
-## Credits
-
-Made by [Your Name](https://github.com/abdus-samee-007)
