@@ -66,3 +66,21 @@ export const sendMessage = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+ export const searchUsers = async (req, res) => {
+    const currentUserId = req.user._id;
+    const keyword = req.query.q 
+    ?{
+        fullName:{ $regex: req.query.q, $options: "i" }
+    } 
+    : {};
+    try{
+        const users = await User.find(keyword)
+        .find({ _id: { $ne: currentUserId } }) 
+        .select("fullName email profilePic");
+        res.status(200).json(users);
+    } catch(error){
+        console.log("Error in searchUsers:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
