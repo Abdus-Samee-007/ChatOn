@@ -4,80 +4,87 @@ import cloudinary from "../lib/cloudinary.js"
 import { getRecieverSocketId, io } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
-    try {
-        const loggedInUserId = req.user._id;
-        const filteredUsers= await User.find({ _id: { $ne: loggedInUserId } }).select('-password');
-        res.status(200).json(filteredUsers);
-    } catch (error) {
-        console.log("Error in getUsersForSidebar", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+    try {
+        const loggedInUserId = req.user._id;
+        const filteredUsers= await User.find({ _id: { $ne: loggedInUserId } }).select('-password');
+        res.status(200).json(filteredUsers);
+    } catch (error) {
+        console.log("Error in getUsersForSidebar", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 };
 
 export const getMessages = async (req, res) => {
-    try {
-        const {id:userToChatId} = req.params;
-        const myId = req.user._id;
-        const messages = await Message.find({
-            $or: [
-                { senderId: myId, receiverId: userToChatId },
-                { senderId: userToChatId, receiverId: myId }
-            ],
-        });
-        res.status(200).json(messages);
+    try {
+        const {id:userToChatId} = req.params;
+        const myId = req.user._id;
+        const messages = await Message.find({
+            $or: [
+                { senderId: myId, receiverId: userToChatId },
+                { senderId: userToChatId, receiverId: myId }
+            ],
+        });
+        res.status(200).json(messages);
 
-    } catch (error) {
-        console.log("Error in getMessages:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-        
-    }
+    } catch (error) {
+        console.log("Error in getMessages:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+        
+    }
 }
 
 export const sendMessage = async (req, res) => {
-    try {
-        const { text, image } = req.body;
-        const { id: receiverId } = req.params;
-        const senderId = req.user._id;
-        
-        let imageUrl;
-        if (image) {
-            const uploadResponse = await cloudinary.uploader.upload(image);
-            imageUrl = uploadResponse.url;
-        }
+    try {
+        const { text, image } = req.body;
+        const { id: receiverId } = req.params;
+        const senderId = req.user._id;
+        
+        let imageUrl;
+        if (image) {
+            const uploadResponse = await cloudinary.uploader.upload(image);
+            imageUrl = uploadResponse.url;
+        }
 
-        const newMessage = new Message({
-            senderId,
-            receiverId,
-            text,
-            image: imageUrl,
-        });
+        const newMessage = new Message({
+            senderId,
+            receiverId,
+            text,
+            image: imageUrl,
+        });
 
-        await newMessage.save();
+        await newMessage.save();
 
-        const recieverSocketID = getRecieverSocketId(receiverId);
-        if (recieverSocketID) {
-            io.to(recieverSocketID).emit("newMessage", newMessage);
-        }
+        const recieverSocketID = getRecieverSocketId(receiverId);
+        if (recieverSocketID) {
+            io.to(recieverSocketID).emit("newMessage", newMessage);
+        }
 
-        res.status(201).json(newMessage);
+        res.status(201).json(newMessage);
 
-    } catch (error) {
-        console.log("Error in sendMessage:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+    } catch (error) {
+        console.log("Error in sendMessage:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
- export const searchUsers = async (req, res) => {
+export const searchUsers = async (req, res) => {
     const currentUserId = req.user._id;
-    const keyword = req.query.q 
-    ?{
-        fullName:{ $regex: req.query.q, $options: "i" }
-    } 
-    : {};
-    try{
-        const users = await User.find(keyword)
-        .find({ _id: { $ne: currentUserId } }) 
-        .select("fullName email profilePic");
+    const searchTerm = req.query.q;
+    
+    // Define the exclusion filter
+    let queryFilter = { _id: { $ne: currentUserId } }; 
+
+    // If a search term exists, add the regex search to the filter
+    if (searchTerm) {
+        // Combined search and exclusion into one object
+        queryFilter.fullName = { $regex: searchTerm, $options: "i" };
+    }
+
+    try {
+        // Execute the single, combined find() query for better reliability
+        const users = await User.find(queryFilter)
+            .select("fullName email profilePic");
+
         res.status(200).json(users);
     } catch(error){
         console.log("Error in searchUsers:", error);
